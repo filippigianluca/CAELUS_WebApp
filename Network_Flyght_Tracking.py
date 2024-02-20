@@ -20,10 +20,12 @@ import sqlite3
 
 
 # SQLite database of DRONES
-db_file = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/drones_sim.db'
+# db_file = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/drones_sim.db'
+db_file = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/drones_sim.db'
 # SQLite database of STATIONS
 # db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBase/SQLlite/test_stationstype.db'
-db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/stations_sim.db'
+# db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/stations_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/stations_sim.db'
 # image url
 # # image url
 url_image = '/Users/gianlucafilippi/GitHub/CAELUS_DT/CAELUS_Interface_Optimiser_DT/Tracker/airplane.png'

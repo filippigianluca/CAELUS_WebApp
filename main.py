@@ -20,10 +20,12 @@ from bokeh.layouts import layout
 
 
 # SQLite database of DRONES
-db_file = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/drones_sim.db'
+# db_file_drones = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/drones_sim.db'
+db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/drones_sim.db'
 # SQLite database of STATIONS
 # db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBase/SQLlite/test_stationstype.db'
-db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/stations_sim.db'
+# db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/stations_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/stations_sim.db'
 # image url
 # # image url
 url_image = '/Users/gianlucafilippi/GitHub/CAELUS_DT/CAELUS_Interface_Optimiser_DT/Tracker/airplane.png'
@@ -36,8 +38,8 @@ url_image = '/Users/gianlucafilippi/GitHub/CAELUS_DT/CAELUS_Interface_Optimiser_
 #DATAFRAME
 def wgs84_to_web_mercator(df, lon="lon", lat="lat"):
     k = 6378137
-    df["x"] = df[lon] * (k * np.pi/180.0)
-    df["y"] = np.log(np.tan((90 + df[lat]) * np.pi/360.0)) * k
+    df["east"] = df[lon] * (k * np.pi/180.0)
+    df["nort"] = np.log(np.tan((90 + df[lat]) * np.pi/360.0)) * k
     return df
 
 #POINT
@@ -67,26 +69,8 @@ x_range,y_range=([xy_min[0],xy_max[0]], [xy_min[1],xy_max[1]])
 
 
 
-conn = sqlite3.connect(db_file)
-conn_2 = sqlite3.connect(db_file_stations)
-
-
-
-# stations_df_A = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'A' ", conn_2)
-# stations_df_H = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'H' ", conn_2)
-# stations_df_L = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'L' ", conn_2)
-# stations_df_new = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'new' ", conn_2)
-
-
-# wgs84_to_web_mercator(stations_df_A)
-# wgs84_to_web_mercator(stations_df_H)
-# wgs84_to_web_mercator(stations_df_L)
-# wgs84_to_web_mercator(stations_df_new)
-
-# stations_source_A=ColumnDataSource(stations_df_A)
-# stations_source_H=ColumnDataSource(stations_df_H)
-# stations_source_L=ColumnDataSource(stations_df_L)
-# stations_source_new=ColumnDataSource(stations_df_new)
+conn_drones = sqlite3.connect(db_file_drones)
+conn_stations = sqlite3.connect(db_file_stations)
 
 
 
@@ -96,20 +80,17 @@ def flight_tracking(doc):
 
     station_name_db = {
         'system':[],   
-        'textID':[], 
         'numberID':[], 
         'info':[], 
         'type':[], 
         'lon':[], 
         'lat':[], 
-        'x':[], 
-        'y':[], 
+        'east':[], 
+        'nort':[], 
         'status':[], 
-        'storge_capacity':[], 
+        'storing_capacity':[], 
         'charging_capacity':[], 
-        'infrastructure_chargin':[], 
-        'infrastructure_takeoff_landing':[], 
-        'infrastructure_drone_storage':[]
+        'takingoff_landing_capacity':[]
     }
     stations_source_A=ColumnDataSource(station_name_db)
     stations_source_H=ColumnDataSource(station_name_db)
@@ -124,16 +105,17 @@ def flight_tracking(doc):
         'info':[], 
         'lon':[], 
         'lat':[], 
-        'x':[], 
-        'y':[], 
+        'east':[], 
+        'nort':[], 
         'package':[], 
         'SOC':[], 
         'T_package':[], 
-        'status':[] #, 'url':[], 'true_track':[], 'rot_angle':[]
+        'status':[],
+        'rot_angle':[] #, 'url':[], 'true_track':[], 'rot_angle':[]
     }
-    flight_source_0 = ColumnDataSource(drone_name_db)
-    flight_source_1 = ColumnDataSource(drone_name_db)    
-    flight_source = ColumnDataSource(drone_name_db)  
+    source_drones_all = ColumnDataSource(drone_name_db)
+    source_drones_package = ColumnDataSource(drone_name_db)    
+    source_drones_nopackage = ColumnDataSource(drone_name_db)  
 
 
 
@@ -142,11 +124,11 @@ def flight_tracking(doc):
     # UPDATING FLIGHT DATA
     def update():
 
-        # db_file = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBase/SQLlite/test_drones.db'
-        # conn = sqlite3.connect(db_file)
-        flight_df = pd.read_sql_query("SELECT * from TrackingDrones", conn)
-        flight_df_0 = pd.read_sql_query("SELECT * from TrackingDrones WHERE package = 0 ", conn)
-        flight_df_1 = pd.read_sql_query("SELECT * from TrackingDrones WHERE package = 1 ", conn)
+        # db_file_drones = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBase/SQLlite/test_drones.db'
+        # conn_drones = sqlite3.connect(db_file_drones)
+        flight_df = pd.read_sql_query("SELECT * from TrackingDrones", conn_drones)
+        flight_df_0 = pd.read_sql_query("SELECT * from TrackingDrones WHERE package = 0 ", conn_drones)
+        flight_df_1 = pd.read_sql_query("SELECT * from TrackingDrones WHERE package = 1 ", conn_drones)
 
         wgs84_to_web_mercator(flight_df)
         wgs84_to_web_mercator(flight_df_0)
@@ -167,18 +149,18 @@ def flight_tracking(doc):
         n_roll_0=len(flight_df_0.index)
         n_roll_1=len(flight_df_1.index)
 
-        flight_source.stream(flight_df.to_dict(orient='list'),n_roll)
-        flight_source_0.stream(flight_df_0.to_dict(orient='list'),n_roll_0)
-        flight_source_1.stream(flight_df_1.to_dict(orient='list'),n_roll_1)
+        source_drones_nopackage.stream(flight_df.to_dict(orient='list'),n_roll)
+        source_drones_all.stream(flight_df_0.to_dict(orient='list'),n_roll_0)
+        source_drones_package.stream(flight_df_1.to_dict(orient='list'),n_roll_1)
         
 
 
 
         ###########################################################
-        stations_df_A = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'A' ", conn_2)
-        stations_df_H = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'H' ", conn_2)
-        stations_df_L = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'L' ", conn_2)
-        stations_df_new = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'new' ", conn_2)
+        stations_df_A = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'A' ", conn_stations)
+        stations_df_H = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'H' ", conn_stations)
+        stations_df_L = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'L' ", conn_stations)
+        stations_df_new = pd.read_sql_query("SELECT * from TrackingStations WHERE type = 'new' ", conn_stations)
 
         wgs84_to_web_mercator(stations_df_A)
         wgs84_to_web_mercator(stations_df_H)
@@ -195,10 +177,10 @@ def flight_tracking(doc):
         n_roll_L=len(stations_df_L.index)
         n_roll_new=len(stations_df_new.index)
 
-        stations_source_A.stream(stations_df_A.to_dict(orient='list'),n_roll)
-        stations_source_H.stream(stations_df_H.to_dict(orient='list'),n_roll_0)
-        stations_source_L.stream(stations_df_L.to_dict(orient='list'),n_roll_1)
-        stations_source_new.stream(stations_df_new.to_dict(orient='list'),n_roll_1)
+        stations_source_A.stream(stations_df_A.to_dict(orient='list'),n_roll_A)
+        stations_source_H.stream(stations_df_H.to_dict(orient='list'),n_roll_H)
+        stations_source_L.stream(stations_df_L.to_dict(orient='list'),n_roll_L)
+        stations_source_new.stream(stations_df_new.to_dict(orient='list'),n_roll_new)
 
 
 
@@ -217,10 +199,10 @@ def flight_tracking(doc):
 
     def plot_stations(size_st, alpha_st):
         
-        pA = p.square('x','y',source=stations_source_A, size=size_st, color="black", alpha = alpha_st)
-        pH = p.square('x','y',source=stations_source_H, size=size_st, color="blue", alpha = alpha_st)
-        pL = p.square('x','y',source=stations_source_L, size=size_st, color="olive", alpha = alpha_st)
-        pnew = p.square('x','y',source=stations_source_new, size=size_st, color="green", alpha = alpha_st)
+        pA = p.square('east','nort',source=stations_source_A, size=size_st, color="black", alpha = alpha_st)
+        pH = p.square('east','nort',source=stations_source_H, size=size_st, color="blue", alpha = alpha_st)
+        pL = p.square('east','nort',source=stations_source_L, size=size_st, color="olive", alpha = alpha_st)
+        pnew = p.square('east','nort',source=stations_source_new, size=size_st, color="green", alpha = alpha_st)
 
         return pA, pH, pL, pnew
         
@@ -258,10 +240,10 @@ def flight_tracking(doc):
  
 
 
-    pDroneEmpty = p.circle('x','y',source=flight_source_0,fill_color='black',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
-    pDroneFull = p.circle('x','y',source=flight_source_1,fill_color='red',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
+    pDroneEmpty = p.circle('east','nort',source=source_drones_all,fill_color='black',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
+    pDroneFull = p.circle('east','nort',source=source_drones_package,fill_color='red',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
 
-    # p.image_url(url='url', x='x', y='y',source=flight_source,anchor='center',angle_units='deg',angle='rot_angle',h_units='screen',w_units='screen',w=400,h=400)
+    # p.image_url(url='url', x='east', y='nort',source=source_drones_nopackage,anchor='center',angle_units='deg',angle='rot_angle',h_units='screen',w_units='screen',w=400,h=400)
     
 
     # STATIONS HOVER
@@ -272,21 +254,31 @@ def flight_tracking(doc):
                             ('longitude', '@lon'), 
                             ('latitude', '@lat'), 
                             ('status', '@status'), 
-                            ('storge capacity', '@storge_capacity'), 
+                            ('storage capacity', '@storing_capacity'), 
                             ('charging capacity', '@charging_capacity'), 
-                            ('infrastructure chargin', '@infrastructure_chargin'),
-                            ('infrastructure takeoff landing', '@infrastructure_takeoff_landing'),
-                            ('infrastructure drone storage', '@infrastructure_drone_storage')
+                            ('infrastructure takeoff landing', '@takingoff_landing_capacity')
                             ]
     
+    # DRONES HOVER
+    tooltips_drone_str = [('system', '@system'), 
+                            ('DRONE ID', '@numberID'), 
+                            ('info', '@info'), 
+                            ('package', '@package'), 
+                            ('longitude', '@lon'), 
+                            ('latitude', '@lat'), 
+                            ('status', '@status'), 
+                            ('SOC', '@SOC'), 
+                            ('T_package', '@T_package')                      
+                            ]
 
 
     stA_hover = bkm.HoverTool(renderers=[pA], tooltips=tooltips_station_str)
     stH_hover = bkm.HoverTool(renderers=[pH],  tooltips=tooltips_station_str)
     stL_hover = bkm.HoverTool(renderers=[pL],  tooltips=tooltips_station_str)
     stnew_hover = bkm.HoverTool(renderers=[pnew],  tooltips=tooltips_station_str)
-    dr_empty = bkm.HoverTool(renderers=[pDroneEmpty],  tooltips=tooltips_station_str)
-    dr_full = bkm.HoverTool(renderers=[pDroneFull], tooltips=tooltips_station_str)
+
+    dr_empty = bkm.HoverTool(renderers=[pDroneEmpty],  tooltips=tooltips_drone_str)
+    dr_full = bkm.HoverTool(renderers=[pDroneFull], tooltips=tooltips_drone_str)
 
     p.add_tools(stA_hover)
     p.add_tools(stH_hover)
@@ -298,8 +290,8 @@ def flight_tracking(doc):
 
 
 
-    labels = LabelSet(x='x', y='y', text='textID',
-                x_offset=5, y_offset=5, source=flight_source, render_mode='canvas',background_fill_color='white',text_font_size="8pt")
+    labels = LabelSet(x='east', y='nort', text='textID',
+                x_offset=5, y_offset=5, source=source_drones_nopackage, render_mode='canvas',background_fill_color='white',text_font_size="8pt")
     p.add_layout(labels)
     
 
