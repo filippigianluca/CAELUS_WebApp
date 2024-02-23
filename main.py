@@ -19,15 +19,23 @@ from bokeh.layouts import layout
 
 
 
-# SQLite database of DRONES
+##### AGENT-BASED SIMULATION FROM CAELUS SERVER
+###############################################
+# db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/drones_sim.db'
+# db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/stations_sim.db'
+
+##### AGENT-BASED SIMULATION FROM GIANLUCA MAC
+##############################################
 # db_file_drones = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/drones_sim.db'
-db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/drones_sim.db'
-# SQLite database of STATIONS
-# db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBase/SQLlite/test_stationstype.db'
 # db_file_stations = '/Users/gianlucafilippi/GitHub/smart-o2c/MATLAB/Problems/CAELUS/AgentBasedModel/stations_sim.db'
-db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/ModelsMetrics/AgentBased/Data_Bases/stations_sim.db'
+
+##### NATS VISUALISATION FROM CAELUS SERVER
+###########################################
+db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Deliveries/webapp_nats_flights/Data_Bases/nats_drones_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Deliveries/webapp_nats_flights/Data_Bases/nats_stations_sim.db'
+
+
 # image url
-# # image url
 url_image = '/Users/gianlucafilippi/GitHub/CAELUS_DT/CAELUS_Interface_Optimiser_DT/Tracker/airplane.png'
 
 
@@ -233,7 +241,7 @@ def flight_tracking(doc):
 
 
 
-    tile_prov=get_provider(OSM)
+    tile_prov=get_provider(CARTODBPOSITRON)
     p.add_tile(tile_prov,level='image')
 
 
@@ -297,7 +305,7 @@ def flight_tracking(doc):
 
 
     # Set Up Select
-    provider_select = Select(value='OSM', 
+    provider_select = Select(value='STAMEN_TERRAIN', 
                             title='Map Provider', 
                             options=['STAMEN_TERRAIN', 'OSM','CARTODBPOSITRON'])
     provider_select.on_change('value', update_prov)
@@ -334,6 +342,10 @@ def flight_tracking(doc):
     # layout
     control_layout = column(provider_select, amplitude_select, alpha_select)
     plot_layout = row(p, control_layout)
+
+
+
+
 
 
 

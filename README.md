@@ -1,4 +1,5 @@
 
+1) ACTIVATE PIPENV: `pipenv shell`
 
 run `bokeh serve --show main.py` to run server in localhost
 
