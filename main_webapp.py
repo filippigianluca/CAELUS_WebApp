@@ -31,8 +31,8 @@ from bokeh.layouts import layout
 
 ##### NATS VISUALISATION FROM CAELUS SERVER
 ###########################################
-db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Deliveries/webapp_nats_flights/Data_Bases/nats_drones_sim.db'
-db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Deliveries/webapp_nats_flights/Data_Bases/nats_stations_sim.db'
+db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/nats_webapp_flights/Data_Bases/nats_drones_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/nats_webapp_flights/Data_Bases/nats_stations_sim.db'
 
 
 # image url
@@ -58,8 +58,10 @@ def wgs84_web_mercator_point(lon,lat):
     return x,y
 
 #AREA EXTENT COORDINATE WGS84
-lon_min,lat_min=-8, 55 # -125.974,30.038
-lon_max,lat_max= 0, 61 # -68.748,52.214
+# lon_min,lat_min=-8, 55 # -125.974,30.038
+# lon_max,lat_max= 0, 61 # -68.748,52.214
+lon_min,lat_min=-5.2, 55.5 # -125.974,30.038
+lon_max,lat_max= -4, 56.5 # -68.748,52.214
 
 #COORDINATE CONVERSION
 xy_min=wgs84_web_mercator_point(lon_min,lat_min)
@@ -207,10 +209,10 @@ def flight_tracking(doc):
 
     def plot_stations(size_st, alpha_st):
         
-        pA = p.square('east','nort',source=stations_source_A, size=size_st, color="black", alpha = alpha_st)
-        pH = p.square('east','nort',source=stations_source_H, size=size_st, color="blue", alpha = alpha_st)
-        pL = p.square('east','nort',source=stations_source_L, size=size_st, color="olive", alpha = alpha_st)
-        pnew = p.square('east','nort',source=stations_source_new, size=size_st, color="green", alpha = alpha_st)
+        pA = p.circle('east','nort',source=stations_source_A, size=size_st, color="black", alpha = alpha_st)
+        pH = p.circle('east','nort',source=stations_source_H, size=size_st, color="blue", alpha = alpha_st)
+        pL = p.circle('east','nort',source=stations_source_L, size=size_st, color="olive", alpha = alpha_st)
+        pnew = p.circle('east','nort',source=stations_source_new, size=size_st, color="green", alpha = alpha_st)
 
         return pA, pH, pL, pnew
         
@@ -248,8 +250,8 @@ def flight_tracking(doc):
  
 
 
-    pDroneEmpty = p.circle('east','nort',source=source_drones_all,fill_color='black',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
-    pDroneFull = p.circle('east','nort',source=source_drones_package,fill_color='red',hover_color='yellow',size=10,fill_alpha=0.8,line_width=0)
+    pDroneEmpty = p.cross('east','nort',source=source_drones_all,fill_color='black',hover_color='yellow',size=15,fill_alpha=0.8,line_width=1.1)
+    pDroneFull = p.cross('east','nort',source=source_drones_package,fill_color='red',hover_color='yellow',size=15,fill_alpha=0.8,line_width=1.1)
 
     # p.image_url(url='url', x='east', y='nort',source=source_drones_nopackage,anchor='center',angle_units='deg',angle='rot_angle',h_units='screen',w_units='screen',w=400,h=400)
     
@@ -305,7 +307,7 @@ def flight_tracking(doc):
 
 
     # Set Up Select
-    provider_select = Select(value='STAMEN_TERRAIN', 
+    provider_select = Select(value='OSM', 
                             title='Map Provider', 
                             options=['STAMEN_TERRAIN', 'OSM','CARTODBPOSITRON'])
     provider_select.on_change('value', update_prov)
