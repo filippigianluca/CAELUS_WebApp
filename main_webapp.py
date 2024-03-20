@@ -31,8 +31,8 @@ from bokeh.layouts import layout
 
 ##### NATS VISUALISATION FROM CAELUS SERVER
 ###########################################
-db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/nats_webapp_flights/Data_Bases/nats_drones_sim.db'
-db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/nats_webapp_flights/Data_Bases/nats_stations_sim.db'
+db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/2024_03_nats/nats_webapp_flights/Data_Bases/nats_drones_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/2024_03_nats/nats_webapp_flights/Data_Bases/nats_stations_sim.db'
 
 
 # image url
