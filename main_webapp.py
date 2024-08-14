@@ -39,6 +39,12 @@ db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Worksh
 db_file_drones = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/2024_03_nhs/nhs_webapp_flights/Data_Bases/nhs_drones_sim.db'
 db_file_stations = '/home/caelus/Documents/GitHub/CAELUS_Optimisation/src/Workshops/2024_03_nhs/nhs_webapp_flights/Data_Bases/nhs_stations_sim.db'
 
+##### example FROM CAELUS SERVER
+###########################################
+db_file_drones = '/home/caelus/Documents/GitHub_Gian/postdoc_caelus/src/WebApp_interface/Data_Bases/nats_drones_sim.db'
+db_file_stations = '/home/caelus/Documents/GitHub_Gian/postdoc_caelus/src/WebApp_interface/Data_Bases/nats_stations_sim.db'
+
+
 
 
 # image url
